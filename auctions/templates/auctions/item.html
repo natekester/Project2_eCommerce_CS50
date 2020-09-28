@@ -1,0 +1,99 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div class="col">
+        {% if user.is_authenticated %}
+            Enter a Bid:
+            <form action="{% url 'item' auc.id %}" method="post" id="biddingForm" name = "biddingForm">
+
+                {% csrf_token %}
+                <input id="userId" name="userId" type="hidden" value={{ user.username }}>
+                
+                {% if highest_bid %}
+                    
+                    <input step=".01" type="number" id="bid" name = "bid" min={{highest_bid}} max="999" />
+                {% else %}
+                    
+                    <input step=".01" type="number" id="bid" name = "bid" min={{auc.starting_bid}} max="999" />
+                {% endif %}
+                
+                
+                
+                <input type="submit" onclick="return confirm('Are you sure you want to submit this bid?')" value="submit" >
+            </form>
+
+        {% else %}
+
+            <h6>you need to sign in before making comments</h6>
+         {% endif %} 
+    </div>
+    <h2>{{auc.title}}</h2>
+    Being sold by: {{auc.creating_user}}
+    
+    {% if highest_bid %}
+        <h6> Current highest bid is: {{highest_bid}}</h6>
+    {% else %}
+        <h6> Starting Bid: {{auc.starting_bid}} </h6>
+    {% endif %}
+    <div id="picturedev">
+        <img id="display" src ="{{auc.image}}">
+    </div>
+    <br>
+    <h6>Item Description:</h6>
+    
+    {{auc.desc}}
+    <br>
+    <br>
+    <h5> Bidding History:</h5>
+    <ul>
+        {% if bids.exists %}
+            {% for bid in bids %}
+                <li> {{bid.bid}} was submitted by: {{bid.biding_user}} at {{bid.bid_input_time}}</li>
+            {% endfor %}
+        {% else %}
+            There are currently no bids on this item.
+        {% endif %}
+    </ul>
+  
+    <br>
+    <h5> Comments:</h5>
+    <ul>
+
+        {% if comments %}
+            {% for comment in comments %}
+                 <li>{{comment.user}}:<br> {{comment.comment}} </li>
+            {% endfor %}
+        {% else %}
+                
+            There are currently no comments on this item.
+            
+        {% endif %}
+     
+    </ul>
+    {% if user.is_authenticated %}
+    Write a comment:
+        <form action="{% url 'item' auc.id %}" method="post" id="editingForm" name = "editingForm">
+
+            {% csrf_token %}
+            <input id="userId" name="userId" type="hidden" value={{ user.username }}>
+            <textarea id="Text" class="text" cols="30" rows ="2" name="Text"></textarea>
+        
+            
+            
+            <input type="submit" value="submit" >
+        </form>
+
+    {% else %}
+
+        <h6>you need to sign in before making comments</h6>
+    {% endif %} 
+
+
+
+
+
+
+    
+    
+
+{% endblock %}

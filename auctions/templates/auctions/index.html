@@ -3,5 +3,15 @@
 {% block body %}
     <h2>Active Listings</h2>
 
-    TODO
+    <ul>
+        {% for auc in Auction %}
+        <li><a href="{% url 'item' id=auc.id %}"> {{auc.title}}</a>  <br>   Starting Bid: {{auc.starting_bid}} </li>
+        <img src ="{{auc.image}}" style="width:10%;height:10%;">
+
+        {% endfor %}
+
+
+    </ul>
+    
+
 {% endblock %}
