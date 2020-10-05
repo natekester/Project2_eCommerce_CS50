@@ -1,0 +1,62 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div class="col">
+        
+        {% if user.username == winning_user %}
+            Congratulations, You won the Auction! The item went for {{highest_bid}} and was sold to {{winning_user}}! 
+
+        {% elif  user.username == auc.creating_user.username %}
+            <h1>Your Item was sold for: </h1>
+            
+         {% endif %} 
+    </div>
+    <h2>{{auc.title}}</h2>
+    Item was sold by: {{auc.creating_user}}
+    
+    {% if highest_bid %}
+        <h6> The Item was sold for: {{highest_bid|floatformat:2}}</h6>
+    {% else %}
+        <h6> No one bid for the original starting bid of: {{auc.starting_bid|floatformat:2}} </h6>
+    {% endif %}
+    <div id="picturedev">
+        <img id="display" src ="{{auc.image}}">
+    </div>
+    <br>
+    <h6>Item Description:</h6>
+    
+    {{auc.desc}}
+    <br>
+    <br>
+    <h5> Bidding History:</h5>
+    <ul>
+        {% if bids.exists %}
+            {% for bid in bids %}
+                <li> {{bid.bid|floatformat:2}} was submitted by: {{bid.biding_user}} at {{bid.bid_input_time}}</li>
+            {% endfor %}
+        {% else %}
+            There were no bids on this item.
+        {% endif %}
+    </ul>
+  
+    <br>
+    <h5> Comments:</h5>
+    <ul>
+
+        {% if comments %}
+            {% for comment in comments %}
+                 <li>{{comment.user}}:<br> {{comment.comment}} </li>
+            {% endfor %}
+        {% else %}
+                
+            There are currently no comments on this item.
+            
+        {% endif %}
+     
+    </ul>
+
+
+    
+    
+
+{% endblock %}

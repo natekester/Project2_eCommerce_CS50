@@ -1,16 +1,17 @@
 body {
     padding: 10px;
 }
-h6{
-    color: red;
-}
-h1{
-    color: red;
+#item{
+    border: 2px solid black;
+    margin: 5px;
+    list-style-type: none;
+    padding-left: 0;
+
 }
 #picturedev{
     height: auto;
     width: 300px;
-    border: 5px solid black;
+    border: 2px solid black;
     text-align: center;
 
 }

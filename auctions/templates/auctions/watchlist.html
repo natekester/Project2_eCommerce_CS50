@@ -1,0 +1,36 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+
+    {% if user.is_authenticated %}
+        {% for auc in Auction %}
+        
+        <li id="item"><a href="{% url 'item' id=auc.auction.id %}"> {{auc.auction.title}}</a>  <br>   
+            Current Bid: ${{auc.auction.largest_bid|floatformat:2}} <br>
+            End Time: {{auc.auction.auction_end}} <br>
+            Description: {{auc.auction.desc}} <br>
+            <form action="{% url 'watchlist' auc.auction.id %}" method="post" id="watchlist" name = "watchlist">
+
+                {% csrf_token %}
+                <input id="auctionID" name="auctionID" type="hidden" value={{auc.auction.id}}>
+                <input id="userId" name="userId" type="hidden" value={{ user.username }}>
+                <input id="watchlist" type="hidden" value = "watchlist" name="watchlist">
+
+                <input type="submit"  value="remove from watchlist" >
+            </form>
+            <img src ="{{auc.auction.image}}" style="width:10%;height:10%;"></li>
+
+            
+            
+        
+
+        {% endfor %}
+    {% else %}
+
+    <h6>You need to have an account in order to have a watchlist.</h6>
+    {% endif %} 
+
+    
+
+{% endblock %}

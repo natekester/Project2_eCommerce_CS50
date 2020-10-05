@@ -1,0 +1,11 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    Your is currently the highest bid on item: {{auc.title}} <br>
+    The current largest bid is:  ${{auc.largest_bid|floatformat:2}} <br>
+
+    To go back to the current item click below: <br>
+    <a href="{% url 'item' id=auc.id %}"> {{auc.title}}</a>
+  
+
+{% endblock %}

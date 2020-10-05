@@ -1,14 +1,35 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+    <h6>Apply Filter:</h6>
+    <form action="{% url 'index' %}" method="post" id="filter" name = "filter">
+
+        {% csrf_token %}
+
+        <select name="category" id="category">
+        <option value="all"> all </option>
+        <option value="recreation">recreation</option>
+        <option value="electronics">electronics</option>
+        <option value="home">home</option>
+        <option value="miscellaneous">miscellaneous</option>
+        </select>
+        
+        <input type="submit"  value="filter" >
+    </form>
+
     <h2>Active Listings</h2>
 
-    <ul>
-        {% for auc in Auction %}
-        <li><a href="{% url 'item' id=auc.id %}"> {{auc.title}}</a>  <br>   Starting Bid: {{auc.starting_bid}} </li>
-        <img src ="{{auc.image}}" style="width:10%;height:10%;">
+    <ul id="auc_items">
+    {% for auc in Auction %}
+    
+    <li id="item"><a href="{% url 'item' id=auc.id %}"> {{auc.title}}</a>  <br>   
+        Current Bid: ${{auc.largest_bid|floatformat:2}} <br>
+        End Time: {{auc.auction_end}} <br>
+        Description: {{auc.desc}} <br>
+        <img src ="{{auc.image}}" style="width:10%;height:10%;"></li>
+    
 
-        {% endfor %}
+    {% endfor %}
 
 
     </ul>

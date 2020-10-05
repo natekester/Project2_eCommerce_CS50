@@ -1,0 +1,11 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    Your bid was lower than the current bid placed on the item: {{auc.title}} <br>
+    The current largest bid is:  ${{auc.largest_bid|floatformat:2}} <br>
+
+    To go back to the current item and place a bid click here: <br>
+    <a href="{% url 'item' id=auc.id %}"> {{auc.title}}</a>
+  
+
+{% endblock %}

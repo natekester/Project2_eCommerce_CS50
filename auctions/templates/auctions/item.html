@@ -2,7 +2,44 @@
 
 {% block body %}
     <div class="col">
+        
+        {% if user.username == auc.creating_user.username %}
+        As the Owner: If you choose to close the auction, the current highest bid will win.
+            <form action="{% url 'item' auc.id %}" method="post" id="closeAuction" name = "closeAuction">
+    
+                {% csrf_token %}
+                <input type="hidden" id="close" name="close" value="close" />
+                <input type="submit" onclick="return confirm('Are you sure you want to close this Auction? The highest bidder will win.')" value="Close Auction" >
+            </form>
+            <br>
+        {% endif %}
+        {% if error %}
+        <h2 style="color:red"> The bid you entered is not larger than the current highest bid of: $auc.largest_bid</h2> <br>
+        {% endif %}
         {% if user.is_authenticated %}
+            {% if remove == True %}
+                <form action="{% url 'item' auc.id %}" method="post" id="remove_watchlist" name = "remove_watchlist">
+
+                    {% csrf_token %}
+                    <input id="auctionID" name="auctionID" type="hidden" value={{auc.auction.id}}>
+                    <input id="userId" name="userId" type="hidden" value={{ user.username }}>
+                    <input id="remove_watchlist" type="hidden" value = "remove_watchlist" name="remove_watchlist">
+
+                    <input type="submit"  value="remove from watchlist" >
+                </form>
+            
+            {% else %}
+                <form action="{% url 'item' auc.id %}" method="post" id="watchlist" name = "watchlist">
+
+                    {% csrf_token %}
+                    <input id="userId" name="userId" type="hidden" value={{ user.username }}>
+                    <input id="watchlist" type="hidden" value = "watchlist" name="watchlist">
+
+                    <input type="submit"  value="add to watchlist" >
+                </form>
+            {% endif %}
+            <br>
+            
             Enter a Bid:
             <form action="{% url 'item' auc.id %}" method="post" id="biddingForm" name = "biddingForm">
 
@@ -11,10 +48,10 @@
                 
                 {% if highest_bid %}
                     
-                    <input step=".01" type="number" id="bid" name = "bid" min={{highest_bid}} max="999" />
+                    <input step=".01" type="number" id="bid" name = "bid" min={{acceptable_bid}} max="50000.00" />
                 {% else %}
                     
-                    <input step=".01" type="number" id="bid" name = "bid" min={{auc.starting_bid}} max="999" />
+                    <input step=".01" type="number" id="bid" name = "bid" min={{acceptable_bid}} max="50000.00" />
                 {% endif %}
                 
                 
@@ -24,16 +61,16 @@
 
         {% else %}
 
-            <h6>you need to sign in before making comments</h6>
+            <h6>you need to sign in before making Bids</h6>
          {% endif %} 
     </div>
     <h2>{{auc.title}}</h2>
     Being sold by: {{auc.creating_user}}
     
     {% if highest_bid %}
-        <h6> Current highest bid is: {{highest_bid}}</h6>
+        <h6> Current highest bid is: {{highest_bid|floatformat:2}}</h6>
     {% else %}
-        <h6> Starting Bid: {{auc.starting_bid}} </h6>
+        <h6> Starting Bid: {{auc.largest_bid|floatformat:2}} </h6>
     {% endif %}
     <div id="picturedev">
         <img id="display" src ="{{auc.image}}">
@@ -48,7 +85,7 @@
     <ul>
         {% if bids.exists %}
             {% for bid in bids %}
-                <li> {{bid.bid}} was submitted by: {{bid.biding_user}} at {{bid.bid_input_time}}</li>
+                <li> {{bid.bid|floatformat:2}} was submitted by: {{bid.biding_user}} at {{bid.bid_input_time}}</li>
             {% endfor %}
         {% else %}
             There are currently no bids on this item.
