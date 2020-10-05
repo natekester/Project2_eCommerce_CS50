@@ -140,7 +140,7 @@ def item(request, id):
             to_delete = Watchlist.objects.filter(auction = auc, user = user)
             to_delete.delete()
             
-            return redirect(reverse('item', kwargs={ 'id': user.id }))
+            return redirect(reverse('item', kwargs={ 'id': id }))
 
          elif 'close' in request.POST:
             #Make sure the usre is the one who created - and then change status and show winning bid and person
